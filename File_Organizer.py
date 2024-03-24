@@ -5,6 +5,15 @@
 import os
 import shutil
 from pathlib import Path
+from datetime import datetime
+
+def prompt_for_directory():
+    """Prompt the user for the directory to organize."""
+    directory_path = input("Please enter the directory path to organize: ")
+    if not Path(directory_path).is_dir():
+        print(f"The path {directory_path} is not a valid directory.")
+        return None
+    return Path(directory_path)
 
 def classify_files(directory):
     # Logic to classify files by type
