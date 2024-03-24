@@ -27,8 +27,11 @@ def classify_files(directory):
             file_mapping[file_type].append(item)
     return file_mapping
     
-def create_folders(directory, categories):
-    # Create folders for each category if they don't already exist
+def create_folders_for_categories(directory, categories):
+    """Create folders for each category if they don't already exist."""
+    for category in categories:
+        folder_path = directory / category.removeprefix(".")
+        folder_path.mkdir(exist_ok=True)
     
 def move_files_to_folders(directory, file_mapping):
     # Move files to their respective folders based on the classification
