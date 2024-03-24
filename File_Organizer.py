@@ -1,5 +1,5 @@
 #File_Organizer.py
 
-###organize files on computer
+###automate the organization of files on computer
 
-print("let's organize our files")
+print("let's organize our files and test this")
