@@ -15,7 +15,7 @@ def prompt_for_directory():
         return None
     return Path(directory_path)
 
-def classify_files(directory):
+def classify_files_by_type(directory):
 # Logic to classify files by type
     """Classify files in the directory by their file type (extension)."""
     file_mapping = {}
@@ -33,15 +33,34 @@ def create_folders_for_categories(directory, categories):
         folder_path = directory / category.removeprefix(".")
         folder_path.mkdir(exist_ok=True)
     
-def move_files_to_folders(directory, file_mapping):
-    # Move files to their respective folders based on the classification
+def move_files(directory, file_mapping, dry_run=True):
+    """Move files to their respective folders based on the classification."""
+    log_entries = []
+    for category, files in file_mapping.items():
+        for file_path in files:
+            new_path = directory / category.removeprefix(".") / file_path.name
+            if dry_run:
+                log_entries.append(f"DRY RUN: Would move {file_path} to {new_path}")
+            else:
+                shutil.move(str(file_path), str(new_path))
+                log_entries.append(f"Moved {file_path} to {new_path}")
+    return log_entries
+
+def write_log(log_entries, directory):
+    """Write the log entries to a log file in the specified directory."""
+    log_file_path = directory / f"file_organizer_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    with log_file_path.open(mode='w') as log_file:
+        for entry in log_entries:
+            log_file.write(entry + "\n")
+    print(f"Log file written to {log_file_path}")
+
 
 def main():
     directory = Path("/path/to/directory")
-    file_mapping = classify_files(directory)
+    file_mapping = classify_files_by_type(directory)
     categories = file_mapping.keys()
-    create_folders(directory, categories)
-    move_files_to_folders(directory, file_mapping)
+    create_folders_for_categories(directory, categories)
+    move_files(directory, file_mapping)
 
 if __name__ == "__main__":
     main()
