@@ -16,7 +16,16 @@ def prompt_for_directory():
     return Path(directory_path)
 
 def classify_files(directory):
-    # Logic to classify files by type
+# Logic to classify files by type
+    """Classify files in the directory by their file type (extension)."""
+    file_mapping = {}
+    for item in directory.iterdir():
+        if item.is_file():
+            file_type = item.suffix.lower() or "Other"
+            if file_type not in file_mapping:
+                file_mapping[file_type] = []
+            file_mapping[file_type].append(item)
+    return file_mapping
     
 def create_folders(directory, categories):
     # Create folders for each category if they don't already exist
