@@ -56,11 +56,20 @@ def write_log(log_entries, directory):
 
 
 def main():
-    directory = Path("/path/to/directory")
+    directory = prompt_for_directory()
+    if not directory:
+        return
+
     file_mapping = classify_files_by_type(directory)
-    categories = file_mapping.keys()
-    create_folders_for_categories(directory, categories)
-    move_files(directory, file_mapping)
+    create_folders_for_categories(directory, file_mapping.keys())
+
+    dry_run = input("Would you like to perform a dry run? (yes/no): ").lower().startswith('y')
+    log_entries = move_files(directory, file_mapping, dry_run=dry_run)
+
+    if log_entries:
+        write_log(log_entries, directory)
+    else:
+        print("No files were moved.")
 
 if __name__ == "__main__":
     main()
